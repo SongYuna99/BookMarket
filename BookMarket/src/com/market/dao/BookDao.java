@@ -5,7 +5,7 @@ import com.market.vo.BookVo;
 
 public class BookDao extends DBConn {
 	/*
-	 * �룄�꽌 �벑濡�
+	 * 도서 등록
 	 */
 	public int insert(BookVo book) {
 		int val = 0;
@@ -31,7 +31,7 @@ public class BookDao extends DBConn {
 		return val;
 	}
 
-	/* �룄�꽌 �쟾泥� 由ъ뒪�듃 議고쉶 */
+	/* 도서 전체 리스트 조회 */
 	public ArrayList<BookVo> select() {
 		ArrayList<BookVo> list = new ArrayList<BookVo>();
 		StringBuffer sb = new StringBuffer(100);
@@ -52,8 +52,8 @@ public class BookDao extends DBConn {
 				book.setImg(rs.getString(8));
 				book.setBdate(rs.getString(9));
 				list.add(book);
-				System.out.println(book.getTitle());
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
