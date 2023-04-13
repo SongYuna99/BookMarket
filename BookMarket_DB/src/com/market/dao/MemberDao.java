@@ -4,7 +4,7 @@ import com.market.vo.MemberVo;
 
 public class MemberDao extends DBConn {
 	/*
-	 * Í≥†Í∞ùÏ†ïÎ≥¥ ÌôïÏù∏
+	 * ∞Ì∞¥¡§∫∏ »Æ¿Œ
 	 */
 	public MemberVo select(String mid) {
 		MemberVo member = new MemberVo();
@@ -33,10 +33,10 @@ public class MemberDao extends DBConn {
 	}
 
 	/*
-	 * Î°úÍ∑∏Ïù∏ Ï≤¥ÌÅ¨
+	 * ∑Œ±◊¿Œ √º≈©
 	 */
-	public int select(String mid, String pass) {
-		int result = 0;
+	public boolean select(String mid, String pass) {
+		boolean result = false;
 		StringBuffer sb = new StringBuffer(100);
 		sb.append(" SELECT COUNT(*) FROM BOOKMARKET_MEMBER ");
 		sb.append(" WHERE MID=? AND PASS=?");
@@ -46,9 +46,13 @@ public class MemberDao extends DBConn {
 			pstmt.setString(1, mid.toUpperCase());
 			pstmt.setString(2, pass);
 			rs = pstmt.executeQuery();
-			while (rs.next())
-				result = rs.getInt(1);
 
+			int val = 0;
+			while (rs.next()) {
+				val = rs.getInt(1);
+			}
+			if (val == 1)
+				result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

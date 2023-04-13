@@ -25,20 +25,20 @@ import com.market.vo.MemberVo;
 
 public class GuestWindow extends JFrame implements ActionListener {
 	MemberDao memberDao;
-	JButton logoBtn, tfBtn, cartBtn, infoBtn, loginBtn, insertBtn;
+	JButton logoBtn, tfBtn, cartBtn, infoBtn, loginBtn, insertBtn, logoutBtn;
 	String[] categoriList = { "소설", "동화", "만화책", "IT", "문제집", "기타" };
 	JButton[] categoriBtnList = new JButton[categoriList.length];
 	JTextField jtf, idField;
 	JPasswordField pwField;
-	Boolean loginFlag;
-	Boolean isAdmin;
+	static Boolean loginFlag;
+	static Boolean isAdmin;
 	JPanel tablePanel, infoPanel, bottomPanel;
 
-	public GuestWindow(String title, int x, int y, int width, int height) {
+	public GuestWindow(String title, int x, int y, int width, int height, boolean login, boolean admin) {
 //		memberDao = new MemberDao();
 		// memberDao 로그인, 관리자 여부 확인
-		loginFlag = true;
-		isAdmin = true;
+		loginFlag = login;
+		isAdmin = admin;
 
 		pwField = new JPasswordField();
 		loginBtn = new JButton("로그인");
@@ -153,6 +153,15 @@ public class GuestWindow extends JFrame implements ActionListener {
 
 			add(loginPanel);
 		}
+		// 로그인 되어 있으면 로그아웃 버튼 만들기
+		else {
+			// topPanel : 로그아웃 버튼
+			logoutBtn = new JButton("로그아웃");
+			logoutBtn.setBounds(1020, 20, 70, 70);
+			logoutBtn.setBackground(new Color(245, 245, 220));
+			logoutBtn.addActionListener(this);
+			topPanel.add(logoutBtn);
+		}
 		if (isAdmin) {
 			// insertBtn : 도서 등록 버튼 (관리자 전용)
 			insertBtn = new JButton("    도서 등록");
@@ -162,21 +171,22 @@ public class GuestWindow extends JFrame implements ActionListener {
 			add(insertBtn);
 		}
 
-		tablePanel = new JPanel();
-		tablePanel.setBounds(20, 180, 800, 480);
-		tablePanel.setBackground(new Color(245, 245, 220));
-		add(tablePanel);
-
-		infoPanel = new JPanel();
-		infoPanel.setBounds(850, 180, 400, 480);
-		infoPanel.setBackground(new Color(245, 245, 220));
-		add(infoPanel);
-
 		// 장바구니, 회원정보, 로그인, 도서등록
 		bottomPanel = new JPanel();
 		bottomPanel.setBounds(20, 180, 1220, 480);
-		bottomPanel.setBackground(new Color(245, 245, 220));
+		bottomPanel.setBackground(Color.GRAY);
+		bottomPanel.setLayout(null);
 		add(bottomPanel);
+
+		tablePanel = new JPanel();
+		tablePanel.setBounds(0, 0, 800, 480);
+		tablePanel.setBackground(new Color(245, 245, 220));
+		bottomPanel.add(tablePanel);
+
+		infoPanel = new JPanel();
+		infoPanel.setBounds(820, 0, 400, 480);
+		infoPanel.setBackground(new Color(245, 245, 220));
+		bottomPanel.add(infoPanel);
 
 		logoBtn.addActionListener(this);
 		jtf.addActionListener(this);
@@ -192,35 +202,83 @@ public class GuestWindow extends JFrame implements ActionListener {
 
 		// 로고 클릭 -> 메인화면
 		if (obj == logoBtn) {
-			new GuestWindow("온라인서점", 0, 0, 1280, 720);
+			removeAll();
+			new GuestWindow("온라인서점", 0, 0, 1280, 720, loginFlag, isAdmin);
 		}
 		// 검색필드 -> 검색화면
 		else if (obj == jtf) {
+			if (jtf.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "단어를 입력해주세요.");
+				jtf.requestFocus();
+			} else {
 
+			}
 		}
 		// 검색버튼 -> 검색화면
 		else if (obj == tfBtn) {
+			if (jtf.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "단어를 입력해주세요.");
+				jtf.requestFocus();
+			} else {
 
+			}
 		}
 		// 장바구니 버튼 -> 1. 로그인화면 2. 장바구니화면
 		else if (obj == cartBtn) {
-
+			tablePanel.setVisible(false);
+			infoPanel.setVisible(false);
+			if (!loginFlag) {
+				// 로그인 화면
+			} else {
+				// 장바구니
+			}
 		}
 		// 회원정보 버튼 -> 1. 로그인화면 2. 회원정보화면
 		else if (obj == infoBtn) {
-
+			tablePanel.setVisible(false);
+			infoPanel.setVisible(false);
+			if (!loginFlag) {
+				// 로그인 화면
+			} else {
+				// 회원정보
+			}
 		}
 		// 비밀번호 필드 -> 메인화면
 		else if (obj == pwField) {
+			if (idField.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.");
+				idField.requestFocus();
+			} else if (pwField.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "비밀번호를 입력해주세요.");
+				pwField.requestFocus();
+			} else {
 
+			}
 		}
 		// 로그인 버튼 -> 메인화면
 		else if (obj == loginBtn) {
-
+			if (idField.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "아이디를 입력해주세요.");
+				idField.requestFocus();
+			} else if (pwField.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "비밀번호를 입력해주세요.");
+				pwField.requestFocus();
+			} else {
+				// 로그인 성공 여부 확인
+				removeAll();
+				new GuestWindow("온라인서점", 0, 0, 1280, 720, true, false);
+			}
 		}
 		// 도서 등록 버튼 -> 등록 화면
 		else if (obj == insertBtn) {
+			tablePanel.setVisible(false);
+			infoPanel.setVisible(false);
 
+		}
+		// 로그아웃 버튼 -> 메인화면
+		else if (obj == logoutBtn) {
+			removeAll();
+			new GuestWindow("온라인서점", 0, 0, 1280, 720, false, false);
 		}
 
 	}
